@@ -38,85 +38,114 @@
         .sidebar-header .logo .ai { color: var(--accent-orange); font-weight: 600; }
         .sidebar-nav { flex-grow: 1; padding-top: 10px; }
         .sidebar-nav ul { list-style: none; }
-        .sidebar-nav li a { display: flex; align-items: center; padding: 16px 22px; color: var(--text-medium); text-decoration: none; transition: all 0.2s ease-in-out; font-size: 1.05em; font-weight: 500; }
+        .sidebar-nav li a { display: flex; align-items: center; padding: 16px 22px; color: var(--text-medium); text-decoration: none; transition: all 0.2s ease-in-out; font-size: 1.05em; font-weight: 500; border-left: 3px solid transparent; }
         .sidebar-nav li a:hover { background-color: var(--secondary-dark); color: var(--text-light); }
-        .sidebar-nav li.active a { background-color: var(--accent-orange); color: var(--primary-dark); font-weight: 700; }
+        .sidebar-nav li.active a { background-color: var(--secondary-dark); color: var(--text-light); font-weight: 600; border-left-color: var(--accent-orange); }
         .sidebar-nav li a i { width: 30px; font-size: 1.2em; text-align: center; margin-right: 15px; }
         .sidebar-footer { padding: 20px; text-align: center; font-size: 0.85em; color: var(--text-medium); border-top: 1px solid var(--border-color-dark); }
         
         /* --- Top Header Bar --- */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; background-color: var(--primary-dark); color: var(--text-light); padding: 10px 25px; height: 65px; flex-shrink: 0; }
+        .header-bar { display: flex; justify-content: space-between; align-items: center; background-color: var(--background-light); color: var(--text-dark); padding: 10px 25px; height: 65px; flex-shrink: 0; border-bottom: 1px solid var(--border-color-light); }
         .header-left { display: flex; align-items: center; }
-        .mobile-menu-toggle { display: none; background: none; border: none; color: var(--text-light); font-size: 1.5em; cursor: pointer; margin-right: 15px; }
+        .mobile-menu-toggle { display: none; background: none; border: none; color: var(--text-dark); font-size: 1.5em; cursor: pointer; margin-right: 15px; }
         .header-info-group { display: flex; }
         .header-info-group span { margin: 0 15px; font-size: 0.95em; color: var(--text-medium); }
-        .header-info-group strong { color: var(--text-light); font-weight: 500; }
+        .header-info-group strong { color: var(--text-dark); font-weight: 500; }
         .header-right { display: flex; align-items: center; }
-        .header-right .icon-group { display: flex; align-items: center; gap: 22px; font-size: 1.3em; margin-right: 25px; }
+        .header-right .icon-group { display: flex; align-items: center; gap: 22px; font-size: 1.3em; margin-right: 25px; color: var(--text-medium); }
         .header-right .user-profile { display: flex; align-items: center; gap: 12px; }
         .user-initial { width: 38px; height: 38px; border-radius: 50%; background-color: var(--accent-orange); color: var(--primary-dark); display: flex; justify-content: center; align-items: center; font-weight: bold; }
 
         /* --- General Content Styles --- */
         .content-area { flex-grow: 1; padding: 30px; overflow-y: auto; }
-        .content-header { background-color: #fff; color: var(--text-dark); padding: 18px 25px; border-radius: 8px; font-size: 1.3em; font-weight: 600; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .content-header h2 { font-size: 1.8em; font-weight: 700; color: var(--text-dark); }
         .page-view { display: none; }
         .page-view.active { display: block; }
-        .card { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }
+        .card { background-color: #fff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); overflow: hidden; }
 
-        /* --- Dashboard Specific Styles --- */
-        .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; margin-bottom: 30px; }
-        .stat-card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .stat-card h4 { font-size: 0.9em; color: var(--text-medium); font-weight: 500; margin-bottom: 10px; }
-        .stat-card .stat-value { font-size: 2.2em; font-weight: 700; color: var(--text-dark); }
-        .stat-card .stat-change { margin-top: 10px; font-size: 0.9em; }
+        /* --- NEW: Dashboard Redesign --- */
+        .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .stat-card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 20px; }
+        .stat-card .icon-container { font-size: 1.8em; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .stat-card.screening .icon-container { background-color: #eaf2ff; color: #3498db; }
+        .stat-card.enrollment .icon-container { background-color: #e9f9f0; color: #2ecc71; }
+        .stat-card.failure .icon-container { background-color: #fef1f1; color: #e74c3c; }
+        .stat-card.completed .icon-container { background-color: #fdf8e6; color: #f39c12; }
+        .stat-card.dropout .icon-container { background-color: #f4f6f7; color: #95a5a6; }
+        .stat-card h4 { font-size: 0.9em; color: var(--text-medium); font-weight: 500; margin-bottom: 5px; }
+        .stat-card .stat-value { font-size: 2em; font-weight: 700; color: var(--text-dark); }
         .dashboard-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .chart-widget { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .chart-widget { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); }
         .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .widget-header h3 { font-size: 1.1em; font-weight: 600; }
+        .widget-header h3 { font-size: 1.2em; font-weight: 600; }
         .widget-controls { display: flex; align-items: center; gap: 10px; }
-        .widget-controls select { padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color-light); }
-        .widget-controls .reload-btn { padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color-light); background: #f7f9fc; cursor: pointer; }
+        .widget-controls select { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color-light); }
+        .widget-controls .reload-btn { padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color-light); background: #f7f9fc; cursor: pointer; }
 
-        /* --- Study Info Specific Styles --- */
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 40px; }
-        .info-item { display: flex; flex-direction: column; }
-        .info-item .label { font-size: 0.9em; color: var(--text-medium); margin-bottom: 5px; }
+        /* --- NEW: Study Info Redesign --- */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 50px; }
+        .info-item { border-bottom: 1px solid var(--border-color-light); padding-bottom: 15px; }
+        .info-item .label { font-size: 0.9em; color: var(--text-medium); margin-bottom: 8px; }
         .info-item .value { font-size: 1.05em; font-weight: 500; color: var(--text-dark); }
 
-        /* --- Reports Specific Styles --- */
-        .reports-filters { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;}
+        /* --- NEW: Reports Redesign --- */
+        .reports-filters { background: #fff; padding: 20px; border-radius: 12px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;}
         .filter-group { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
         .filter-group select { min-width: 250px; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color-light); }
         .actions-group { display: flex; gap: 10px; }
-        .actions-group button { padding: 10px 15px; font-weight: 600; border-radius: 6px; cursor: pointer; border: 1px solid transparent; }
+        .actions-group button { padding: 10px 18px; font-weight: 600; border-radius: 6px; cursor: pointer; border: 1px solid transparent; transition: background-color 0.2s; }
         .btn-secondary { background-color: #f0f4f8; color: var(--text-dark); border-color: var(--border-color-light); }
+        .btn-secondary:hover { background-color: #e1e8f0; }
         .btn-primary { background-color: var(--accent-orange); color: white; }
+        .btn-primary:hover { background-color: #d88c0f; }
         .table-container { overflow-x: auto; }
         .reports-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
-        .reports-table th, .reports-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color-light); }
-        .reports-table thead th { font-size: 0.9em; font-weight: 600; color: var(--text-medium); background-color: #f7f9fc; }
+        .reports-table th, .reports-table td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border-color-light); }
+        .reports-table thead th { font-size: 0.9em; font-weight: 600; color: var(--text-medium); background-color: #f7f9fc; border-top: 1px solid var(--border-color-light); }
+        .reports-table tbody tr:nth-child(even) { background-color: #fcfdff; }
+        .reports-table tbody tr:hover { background-color: #f7f9fc; }
 
-        /* --- CRF Vision & Form Styles --- */
+        /* --- NEW: CRF Vision & Form Redesign --- */
         .visit-card-header { cursor: pointer; }
-        .visit-row { display: grid; grid-template-columns: 50px 3fr repeat(8, 1fr); align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--border-color-light); }
+        .visit-row { display: grid; grid-template-columns: 50px 3fr repeat(8, 1fr); align-items: center; padding: 16px 25px; border-bottom: 1px solid var(--border-color-light); transition: background-color 0.2s; }
+        .visit-row:hover { background-color: #f7f9fc; }
         .form-name { font-weight: 600; font-size: 1.05em; } .form-version { font-size: 0.85em; color: var(--text-medium); margin-top: 2px; }
-        .status-icon { font-size: 1.4em; text-align: center; opacity: 0.8; cursor: pointer; transition: transform 0.2s; }
-        .status-icon.disabled { color: #ccc; cursor: not-allowed; } .status-icon:not(.disabled):hover { transform: scale(1.2); opacity: 1; }
+        .status-icon { font-size: 1.4em; text-align: center; opacity: 0.8; cursor: pointer; transition: transform 0.2s, color 0.2s; }
+        .status-icon.disabled { color: #ccc; cursor: not-allowed; } .status-icon:not(.disabled):hover { transform: scale(1.2); color: var(--accent-orange); }
         .status-icon.green { color: var(--status-green); } .status-icon.blue { color: var(--status-blue); }
-        .form-container { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 30px; }
-        .form-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 20px; margin-bottom: 25px; }
+        .form-container { background-color: #fff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); padding: 35px; }
+        .form-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 20px; margin-bottom: 30px; }
         .back-button { background: #f0f4f8; border: 1px solid #dde3ea; color: var(--text-dark); padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .form-title { color: #888; font-size: 1.2em; font-weight: 500; text-align: center; margin-bottom: 25px; background: #f7f9fc; padding: 10px; border-radius: 6px; }
-        .form-row { display: flex; flex-wrap: wrap; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f4f8; gap: 15px; }
+        .form-title { color: var(--text-dark); font-size: 1.4em; font-weight: 600; text-align: center; margin-bottom: 30px; background: #f7f9fc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color-light); }
+        .form-row { display: flex; flex-wrap: wrap; align-items: center; padding: 18px 0; border-bottom: 1px solid #f0f4f8; gap: 15px; }
         .form-row label { flex-basis: 30%; font-weight: 500; min-width: 200px;}
         .form-row .input-area { flex: 1; display: flex; align-items: center; gap: 20px; min-width: 250px; }
         .form-row .form-actions { margin-left: auto; display: flex; gap: 15px; font-size: 1.2em; color: #aaa; }
-        input[type="text"], input[type="date"], select, .text-display { width: 100%; padding: 10px; border: 1px solid #dde3ea; border-radius: 6px; background: #f7f9fc; font-size: 1em; }
+        input[type="text"], input[type="date"], select, .text-display { width: 100%; padding: 12px; border: 1px solid #dde3ea; border-radius: 6px; background: #f7f9fc; font-size: 1em; transition: border-color 0.2s, box-shadow 0.2s; }
+        input[type="text"]:focus, input[type="date"]:focus, select:focus { border-color: var(--accent-orange); box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2); outline: none; }
         #consent-status-message { width: 100%; text-align: center; margin-top: 15px; font-weight: 600; min-height: 20px; }
         .status-success { color: var(--status-green); }
         .status-error { color: #e74c3c; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
-        #overlay.active { display: block; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; } #overlay.active { display: block; }
+        
+        /* --- Chatbot Styles --- */
+        #chatbot-widget { position: fixed; bottom: 25px; right: 25px; z-index: 1001; }
+        #chat-bubble { width: 60px; height: 60px; background-color: var(--accent-orange); color: var(--primary-dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8em; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease; }
+        #chat-bubble:hover { transform: scale(1.1); }
+        #chat-window { width: 370px; max-height: 500px; background-color: #fff; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; position: absolute; bottom: 80px; right: 0; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+        #chat-window.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #chat-header { background-color: var(--primary-dark); color: var(--text-light); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        #chat-header h4 { font-weight: 600; }
+        #close-chat-btn { background: none; border: none; color: var(--text-light); font-size: 1.2em; cursor: pointer; }
+        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-message { max-width: 85%; padding: 10px 15px; border-radius: 12px; line-height: 1.5; }
+        .bot-message { background-color: #f1f0f0; color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user-message { background-color: var(--accent-orange); color: var(--primary-dark); font-weight: 500; align-self: flex-end; border-bottom-right-radius: 2px; }
+        #chat-input-options { border-top: 1px solid var(--border-color-light); padding: 15px; }
+        #chat-input-options p { font-weight: 600; margin-bottom: 10px; color: var(--text-dark); }
+        .question-btn { display: block; width: 100%; background: none; border: 1px solid var(--border-color-light); padding: 10px; margin-bottom: 8px; border-radius: 6px; text-align: left; cursor: pointer; transition: background-color 0.2s; font-family: 'Inter', sans-serif; font-size: 0.95em; }
+        .question-btn:hover { background-color: #f7f9fc; }
         
         /* --- Responsive Styles --- */
         @media (max-width: 992px) {
@@ -136,24 +165,6 @@
             .header-right .icon-group { display: none; }
             .form-header { flex-direction: column; align-items: stretch; }
         }
-        
-        /* --- NEW: Chatbot Styles --- */
-        #chatbot-widget { position: fixed; bottom: 25px; right: 25px; z-index: 1001; }
-        #chat-bubble { width: 60px; height: 60px; background-color: var(--accent-orange); color: var(--primary-dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8em; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease; }
-        #chat-bubble:hover { transform: scale(1.1); }
-        #chat-window { width: 370px; max-height: 500px; background-color: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; position: absolute; bottom: 80px; right: 0; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
-        #chat-window.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        #chat-header { background-color: var(--primary-dark); color: var(--text-light); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        #chat-header h4 { font-weight: 600; }
-        #close-chat-btn { background: none; border: none; color: var(--text-light); font-size: 1.2em; cursor: pointer; }
-        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .chat-message { max-width: 85%; padding: 10px 15px; border-radius: 12px; line-height: 1.5; }
-        .bot-message { background-color: #f1f0f0; color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 2px; }
-        .user-message { background-color: var(--accent-orange); color: var(--primary-dark); font-weight: 500; align-self: flex-end; border-bottom-right-radius: 2px; }
-        #chat-input-options { border-top: 1px solid var(--border-color-light); padding: 15px; }
-        #chat-input-options p { font-weight: 600; margin-bottom: 10px; color: var(--text-dark); }
-        .question-btn { display: block; width: 100%; background: none; border: 1px solid var(--border-color-light); padding: 10px; margin-bottom: 8px; border-radius: 6px; text-align: left; cursor: pointer; transition: background-color 0.2s; font-family: 'Inter', sans-serif; font-size: 0.95em; }
-        .question-btn:hover { background-color: #f7f9fc; }
         @media (max-width: 480px) {
             #chat-window { width: calc(100vw - 40px); bottom: 90px; right: -15px; }
         }
@@ -165,7 +176,7 @@
     <aside class="sidebar">
         <div class="sidebar-header"><span class="logo">Clin<span class="ai">AI</span></span></div>
         <nav class="sidebar-nav">
-            <ul>
+             <ul>
                 <li><a href="#" data-view="dashboard-view"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li><a href="#" data-view="study-info-view"><i class="fas fa-book-open"></i> Study Information</a></li>
                 <li><a href="#" data-view="visit-list-view"><i class="fas fa-th-large"></i> CRF Vision</a></li>
@@ -193,26 +204,32 @@
             
             <!-- VIEW 1: Dashboard -->
             <div id="dashboard-view" class="page-view">
-                 <div class="content-header" style="display:flex; justify-content: space-between; align-items: center;"><span>Dashboard</span><label class="switch" style="font-size: 0.9em; font-weight: 500;"><input type="checkbox"> Edit mode</label></div>
-                <div class="dashboard-stats"><div class="stat-card"><h4>Total Screening</h4><div class="stat-value">25</div><div class="stat-change" style="color: green;">+5.55%</div></div><div class="stat-card"><h4>Total Enrollment</h4><div class="stat-value">20</div><div class="stat-change" style="color: green;">+4%</div></div><div class="stat-card"><h4>Total Screen Failure</h4><div class="stat-value">0</div><div class="stat-change" style="color: grey;">0%</div></div><div class="stat-card"><h4>Total Completed</h4><div class="stat-value">4</div><div class="stat-change" style="color: green;">+0.85%</div></div><div class="stat-card"><h4>Total Dropped Out</h4><div class="stat-value">0</div><div class="stat-change" style="color: grey;">0%</div></div></div>
-                <div class="dashboard-charts"><div class="chart-widget"><div class="widget-header"><h3>Subject Visit Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i> Reload</button></div></div><canvas id="visitSummaryChart"></canvas></div><div class="chart-widget"><div class="widget-header"><h3>Subject Visit CRF Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i> Reload</button></div></div><canvas id="crfSummaryChart"></canvas></div></div>
+                <div class="content-header"><h2>Dashboard</h2><label class="switch" style="font-size: 0.9em; font-weight: 500;"><input type="checkbox"> Edit mode</label></div>
+                <div class="dashboard-stats">
+                    <div class="stat-card screening"><div class="icon-container"><i class="fas fa-user-check"></i></div><div><h4>Total Screening</h4><div class="stat-value">25</div></div></div>
+                    <div class="stat-card enrollment"><div class="icon-container"><i class="fas fa-users"></i></div><div><h4>Total Enrollment</h4><div class="stat-value">20</div></div></div>
+                    <div class="stat-card failure"><div class="icon-container"><i class="fas fa-user-times"></i></div><div><h4>Total Screen Failure</h4><div class="stat-value">0</div></div></div>
+                    <div class="stat-card completed"><div class="icon-container"><i class="fas fa-check-double"></i></div><div><h4>Total Completed</h4><div class="stat-value">4</div></div></div>
+                    <div class="stat-card dropout"><div class="icon-container"><i class="fas fa-user-slash"></i></div><div><h4>Total Dropped Out</h4><div class="stat-value">0</div></div></div>
+                </div>
+                <div class="dashboard-charts"><div class="chart-widget"><div class="widget-header"><h3>Subject Visit Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i></button></div></div><canvas id="visitSummaryChart"></canvas></div><div class="chart-widget"><div class="widget-header"><h3>Subject Visit CRF Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i></button></div></div><canvas id="crfSummaryChart"></canvas></div></div>
             </div>
 
             <!-- VIEW 2: Study Information -->
             <div id="study-info-view" class="page-view">
-                <div class="content-header">Study Information</div>
-                <div class="card" style="padding: 30px;"><div class="info-grid"><div class="info-item"><span class="label">Client Name</span><span class="value">HealthGenic</span></div><div class="info-item"><span class="label">Study Name</span><span class="value">Demo Study</span></div><div class="info-item"><span class="label">Protocol ID</span><span class="value">DPR298</span></div><div class="info-item"><span class="label">Protocol Title</span><span class="value">Demo study</span></div><div class="info-item"><span class="label">Sponsor</span><span class="value">HealthGenic</span></div><div class="info-item"><span class="label">Sponsor Address</span><span class="value">USA</span></div><div class="info-item"><span class="label">Planned Study Start Date</span><span class="value">23/Jun/2023</span></div><div class="info-item"><span class="label">Expected End Date</span><span class="value">13/Aug/2025</span></div><div class="info-item"><span class="label">Study Committed</span><span class="value">true</span></div><div class="info-item"><span class="label">Study Go Live Date</span><span class="value"></span></div><div class="info-item"><span class="label">After Go Live Start Study Date</span><span class="value"></span></div><div class="info-item"><span class="label">After Go Live Stop Study Date</span><span class="value"></span></div><div class="info-item"><span class="label">Study Freezed</span><span class="value">false</span></div><div class="info-item"></div><div class="info-item"><span class="label">Expected Total Enrollment</span><span class="value">1000</span></div><div class="info-item"><span class="label">Principal Investigator</span><span class="value">Zames</span></div><div class="info-item"><span class="label">Therapeutic Area</span><span class="value">Oncology and Hematology</span></div><div class="info-item"><span class="label">Study Phase</span><span class="value">PHASE IV</span></div><div class="info-item"><span class="label">Blinding</span><span class="value">Open Label</span></div><div class="info-item"><span class="label">Study Type</span><span class="value">Restrospective</span></div><div class="info-item"><span class="label">Study Subject ID</span><span class="value">Auto Generated Non-Editable</span></div><div class="info-item"><span class="label">Date Format</span><span class="value">DD/MMM/YYYY</span></div><div class="info-item"><span class="label">Study has SDV Verification</span><span class="value">true</span></div><div class="info-item"><span class="label">Study has PI Signature</span><span class="value">true</span></div><div class="info-item"><span class="label">Study has Site Level Visit CRF Mapping</span><span class="value">false</span></div></div></div>
+                <div class="content-header"><h2>Study Information</h2></div>
+                <div class="card" style="padding: 35px;"><div class="info-grid"><div class="info-item"><span class="label">Client Name</span><span class="value">HealthGenic</span></div><div class="info-item"><span class="label">Study Name</span><span class="value">Demo Study</span></div><div class="info-item"><span class="label">Protocol ID</span><span class="value">DPR298</span></div><div class="info-item"><span class="label">Protocol Title</span><span class="value">Demo study</span></div><div class="info-item"><span class="label">Sponsor</span><span class="value">HealthGenic</span></div><div class="info-item"><span class="label">Sponsor Address</span><span class="value">USA</span></div><div class="info-item"><span class="label">Planned Study Start Date</span><span class="value">23/Jun/2023</span></div><div class="info-item"><span class="label">Expected End Date</span><span class="value">13/Aug/2025</span></div><div class="info-item"><span class="label">Study Committed</span><span class="value">true</span></div><div class="info-item"><span class="label">Study Go Live Date</span><span class="value"></span></div><div class="info-item"><span class="label">After Go Live Start Study Date</span><span class="value"></span></div><div class="info-item"><span class="label">After Go Live Stop Study Date</span><span class="value"></span></div><div class="info-item"><span class="label">Study Freezed</span><span class="value">false</span></div><div class="info-item"></div><div class="info-item"><span class="label">Expected Total Enrollment</span><span class="value">1000</span></div><div class="info-item"><span class="label">Principal Investigator</span><span class="value">Zames</span></div><div class="info-item"><span class="label">Therapeutic Area</span><span class="value">Oncology and Hematology</span></div><div class="info-item"><span class="label">Study Phase</span><span class="value">PHASE IV</span></div><div class="info-item"><span class="label">Blinding</span><span class="value">Open Label</span></div><div class="info-item"><span class="label">Study Type</span><span class="value">Restrospective</span></div><div class="info-item"><span class="label">Study Subject ID</span><span class="value">Auto Generated Non-Editable</span></div><div class="info-item"><span class="label">Date Format</span><span class="value">DD/MMM/YYYY</span></div><div class="info-item"><span class="label">Study has SDV Verification</span><span class="value">true</span></div><div class="info-item"><span class="label">Study has PI Signature</span><span class="value">true</span></div><div class="info-item"><span class="label">Study has Site Level Visit CRF Mapping</span><span class="value">false</span></div></div></div>
             </div>
             
             <!-- VIEW 3: CRF Vision (Visit List) -->
             <div id="visit-list-view" class="page-view">
-                <div class="content-header">Subject ID - S01103</div>
+                <div class="content-header"><h2>Subject ID - S01103</h2></div>
                 <div class="card"><div class="visit-card-header"><h3>Visit-1 Screening Visit</h3><i class="fas fa-chevron-up"></i></div><div class="visit-card-body"><div class="visit-row"><i class="status-icon green fas fa-eye" data-form="visit-form"></i><div><div class="form-name">VISIT 1 - SCREENING VISIT[V1VD]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div><div class="visit-row"><i class="status-icon green fas fa-eye" data-form="consent-form"></i><div><div class="form-name">INFORMED CONSENT[ICF]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div><div class="visit-row"><i class="status-icon green fas fa-eye" data-form="demographics-form"></i><div><div class="form-name">DEMOGRAPHICS[DG]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div></div></div>
             </div>
 
             <!-- VIEW 4: Reports -->
             <div id="reports-view" class="page-view">
-                <div class="content-header">Reports</div><div class="reports-filters"><div class="filter-group"><select><option>Select Sites: Sites(S02) x, Site1(S01) x</option></select><select><option>Select A Report: CRF Summary x</option></select></div><div class="actions-group"><button class="btn-secondary"><i class="fas fa-file-excel"></i> Export to excel</button><button class="btn-primary">Get Reports</button><button class="btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button></div></div>
+                <div class="content-header"><h2>Reports</h2></div><div class="reports-filters"><div class="filter-group"><select><option>Select Sites: Sites(S02) x, Site1(S01) x</option></select><select><option>Select A Report: CRF Summary x</option></select></div><div class="actions-group"><button class="btn-secondary"><i class="fas fa-file-excel"></i> Export to excel</button><button class="btn-primary">Get Reports</button><button class="btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button></div></div>
                 <div class="card table-container"><table class="reports-table"><thead><tr><th>Protocol ID</th><th>Site ID</th><th>Subject Code</th><th>Study Name</th><th>Subject Status</th><th>Data Entry Start Date</th><th>Visit Name</th><th>CRF Name</th><th>CRF Version</th><th>CRF Status</th></tr></thead><tbody><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>10/Sep/2023</td><td>Visit-1 Screening Visit</td><td>VISIT 1 - SCREENING VISIT</td><td>1.0</td><td>Lock</td></tr><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>10/Sep/2023</td><td>Visit-1 Screening Visit</td><td>INFORMED CONSENT</td><td>1.0</td><td>Lock</td></tr><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>11/Sep/2023</td><td>Visit-2 Base Line Period</td><td>VISIT 2 - BASELINE PERIOD</td><td>1.0</td><td>Lock</td></tr><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>11/Sep/2023</td><td>Visit-3 Treatment Period</td><td>LABORATORY RESULTS (EFFICACY TESTS)</td><td>1.0</td><td>Lock</td></tr></tbody></table></div>
             </div>
 
@@ -229,28 +246,13 @@
         </main>
     </div>
 
-    <!-- NEW: Chatbot Widget HTML -->
+    <!-- Chatbot Widget HTML -->
     <div id="chatbot-widget">
-        <div id="chat-bubble">
-            <i class="fas fa-comment-dots"></i>
-        </div>
+        <div id="chat-bubble"><i class="fas fa-comment-dots"></i></div>
         <div id="chat-window">
-            <div id="chat-header">
-                <h4>ClinAI Assistant</h4>
-                <button id="close-chat-btn"><i class="fas fa-times"></i></button>
-            </div>
-            <div id="chat-messages">
-                <div class="chat-message bot-message">
-                    Hello! How can I help you today? Please select a topic below.
-                </div>
-            </div>
-            <div id="chat-input-options">
-                <p>Common Questions:</p>
-                <button class="question-btn">What is 21 CFR Part 11?</button>
-                <button class="question-btn">What is a CAPA?</button>
-                <button class="question-btn">How is training managed in a QMS?</button>
-                <button class="question-btn">What is an audit trail?</button>
-            </div>
+            <div id="chat-header"><h4>ClinAI Assistant</h4><button id="close-chat-btn"><i class="fas fa-times"></i></button></div>
+            <div id="chat-messages"><div class="chat-message bot-message">Hello! How can I help you today? Please select a topic below.</div></div>
+            <div id="chat-input-options"><p>Common Questions:</p><button class="question-btn">What is 21 CFR Part 11?</button><button class="question-btn">What is a CAPA?</button><button class="question-btn">How is training managed in a QMS?</button><button class="question-btn">What is an audit trail?</button></div>
         </div>
     </div>
 
@@ -258,9 +260,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- STEP 1: INITIALIZE SUPABASE CLIENT ---
             const SUPABASE_URL = 'https://xykqyuefcbjgdooznlzw.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5a3F5dWVmY2JqZ2Rvb3pubHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMDI2NjIsImV4cCI6MjA2ODc3ODY2Mn0.GoCVbJjQqbVsMNluxoHdZ90elbzKvAqCcJH9JR66w'; 
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5a3F5dWVmY2JqZ2Rvb3pubHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMDI2NjIsImV4cCI6MjA2ODc3ODY2Mn0.GoCVbFbJjQqbVsMNluxoHdZ90elbzKvAqCcJH9JR66w'; 
 
-            // Correctly initialize the client from the global supabase object
             const { createClient } = window.supabase;
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('Supabase client initialized successfully.');
