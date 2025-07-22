@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClinAIQMS - EDC</title>
+    <title>ClinAI - EDC</title>
     
-    <!-- Google Fonts for a modern look -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,28 +16,22 @@
     <!-- Chart.js for Dashboard Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         /* --- Professional Color Scheme & Fonts --- */
         :root {
-            --primary-dark: #1a1a1a;
-            --secondary-dark: #2c2c2c;
-            --accent-orange: #F39C12; /* A true, strong orange */
-            --text-light: #f5f5f5;
-            --text-medium: #a0a0a0;
-            --text-dark: #1a1a1a;
-            --background-light: #fdfdfd;
-            --background-main: #f0f4f8;
-            --border-color-dark: #444444;
-            --border-color-light: #e9eef2;
-            --status-green: #2ecc71;
-            --status-blue: #3498db;
+            --primary-dark: #1a1a1a; --secondary-dark: #2c2c2c; --accent-orange: #F39C12; --text-light: #f5f5f5;
+            --text-medium: #a0a0a0; --text-dark: #1a1a1a; --background-light: #fdfdfd; --background-main: #f0f4f8;
+            --border-color-dark: #444444; --border-color-light: #e9eef2; --status-green: #2ecc71; --status-blue: #3498db;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--background-main); display: flex; height: 100vh; overflow: hidden; font-size: 14px; }
 
         /* --- Main Layout & Sidebar --- */
-        .sidebar { width: 250px; background-color: var(--primary-dark); color: var(--text-light); display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid var(--border-color-dark); }
+        .sidebar { width: 250px; background-color: var(--primary-dark); color: var(--text-light); display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid var(--border-color-dark); transition: transform 0.3s ease-in-out; z-index: 1000; }
         .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         .sidebar-header { padding: 22px; text-align: left; border-bottom: 1px solid var(--border-color-dark); }
         .sidebar-header .logo { font-size: 1.8em; font-weight: 700; letter-spacing: 1px; }
@@ -52,8 +46,11 @@
         
         /* --- Top Header Bar --- */
         .header-bar { display: flex; justify-content: space-between; align-items: center; background-color: var(--primary-dark); color: var(--text-light); padding: 10px 25px; height: 65px; flex-shrink: 0; }
-        .header-left span, .header-right span { margin: 0 15px; font-size: 0.95em; color: var(--text-medium); }
-        .header-left strong, .header-right strong { color: var(--text-light); font-weight: 500; }
+        .header-left { display: flex; align-items: center; }
+        .mobile-menu-toggle { display: none; background: none; border: none; color: var(--text-light); font-size: 1.5em; cursor: pointer; margin-right: 15px; }
+        .header-info-group { display: flex; }
+        .header-info-group span { margin: 0 15px; font-size: 0.95em; color: var(--text-medium); }
+        .header-info-group strong { color: var(--text-light); font-weight: 500; }
         .header-right { display: flex; align-items: center; }
         .header-right .icon-group { display: flex; align-items: center; gap: 22px; font-size: 1.3em; margin-right: 25px; }
         .header-right .user-profile { display: flex; align-items: center; gap: 12px; }
@@ -62,8 +59,8 @@
         /* --- General Content Styles --- */
         .content-area { flex-grow: 1; padding: 30px; overflow-y: auto; }
         .content-header { background-color: #fff; color: var(--text-dark); padding: 18px 25px; border-radius: 8px; font-size: 1.3em; font-weight: 600; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .page-view { display: none; } /* Hidden by default */
-        .page-view.active { display: block; } /* Shown when active */
+        .page-view { display: none; }
+        .page-view.active { display: block; }
         .card { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }
 
         /* --- Dashboard Specific Styles --- */
@@ -87,18 +84,19 @@
         .info-item .value { font-size: 1.05em; font-weight: 500; color: var(--text-dark); }
 
         /* --- Reports Specific Styles --- */
-        .reports-filters { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
-        .filter-group { display: flex; gap: 15px; align-items: center; }
+        .reports-filters { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 25px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;}
+        .filter-group { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
         .filter-group select { min-width: 250px; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color-light); }
         .actions-group { display: flex; gap: 10px; }
         .actions-group button { padding: 10px 15px; font-weight: 600; border-radius: 6px; cursor: pointer; border: 1px solid transparent; }
         .btn-secondary { background-color: #f0f4f8; color: var(--text-dark); border-color: var(--border-color-light); }
         .btn-primary { background-color: var(--accent-orange); color: white; }
-        .reports-table { width: 100%; border-collapse: collapse; }
+        .table-container { overflow-x: auto; }
+        .reports-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
         .reports-table th, .reports-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border-color-light); }
         .reports-table thead th { font-size: 0.9em; font-weight: 600; color: var(--text-medium); background-color: #f7f9fc; }
 
-        /* --- CRF Vision Styles from Previous Version --- */
+        /* --- CRF Vision & Form Styles --- */
         .visit-card-header { cursor: pointer; }
         .visit-row { display: grid; grid-template-columns: 50px 3fr repeat(8, 1fr); align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--border-color-light); }
         .form-name { font-weight: 600; font-size: 1.05em; } .form-version { font-size: 0.85em; color: var(--text-medium); margin-top: 2px; }
@@ -106,21 +104,45 @@
         .status-icon.disabled { color: #ccc; cursor: not-allowed; } .status-icon:not(.disabled):hover { transform: scale(1.2); opacity: 1; }
         .status-icon.green { color: var(--status-green); } .status-icon.blue { color: var(--status-blue); }
         .form-container { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 30px; }
-        .form-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color-light); padding-bottom: 20px; margin-bottom: 25px; }
+        .form-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid var(--border-color-light); padding-bottom: 20px; margin-bottom: 25px; }
         .back-button { background: #f0f4f8; border: 1px solid #dde3ea; color: var(--text-dark); padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
         .form-title { color: #888; font-size: 1.2em; font-weight: 500; text-align: center; margin-bottom: 25px; background: #f7f9fc; padding: 10px; border-radius: 6px; }
-        .form-row { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f4f8; } .form-row label { flex: 1; font-weight: 500; }
-        .form-row .input-area { flex: 2; display: flex; align-items: center; gap: 20px; } .form-row .form-actions { margin-left: auto; display: flex; gap: 15px; font-size: 1.2em; color: #aaa; }
+        .form-row { display: flex; flex-wrap: wrap; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f4f8; gap: 15px; }
+        .form-row label { flex-basis: 30%; font-weight: 500; min-width: 200px;}
+        .form-row .input-area { flex: 1; display: flex; align-items: center; gap: 20px; min-width: 250px; }
+        .form-row .form-actions { margin-left: auto; display: flex; gap: 15px; font-size: 1.2em; color: #aaa; }
         input[type="text"], input[type="date"], select, .text-display { width: 100%; padding: 10px; border: 1px solid #dde3ea; border-radius: 6px; background: #f7f9fc; font-size: 1em; }
+        #consent-status-message { width: 100%; text-align: center; margin-top: 15px; font-weight: 600; min-height: 20px; }
+        .status-success { color: var(--status-green); }
+        .status-error { color: #e74c3c; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
+        #overlay.active { display: block; }
         
+        /* --- Responsive Styles --- */
+        @media (max-width: 992px) {
+            body { flex-direction: column; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; z-index: 1000; transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-menu-toggle { display: block; }
+            .header-info-group { display: none; }
+            .dashboard-charts { grid-template-columns: 1fr; }
+            .info-grid { grid-template-columns: 1fr; }
+            .visit-row { grid-template-columns: 40px 1fr; grid-template-rows: auto; gap: 10px; }
+            .visit-row > i:not(:first-child) { display: none; }
+        }
+        @media (max-width: 768px) {
+            .content-area { padding: 15px; }
+            .header-bar { padding: 10px 15px; }
+            .header-right .icon-group { display: none; }
+            .form-header { flex-direction: column; align-items: stretch; }
+        }
+
     </style>
 </head>
 <body>
-
+    <div id="overlay"></div>
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <span class="logo">Clin<span class="ai">AI</span>QMS</span>
-        </div>
+        <div class="sidebar-header"><span class="logo">Clin<span class="ai">AI</span></span></div>
         <nav class="sidebar-nav">
             <ul>
                 <li><a href="#" data-view="dashboard-view"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -134,124 +156,43 @@
                 <li><a href="#"><i class="fas fa-cog"></i> Administration</a></li>
             </ul>
         </nav>
-        <div class="sidebar-footer">ClinAIQMS © 2024. All rights reserved</div>
+        <div class="sidebar-footer">ClinAI © 2024. All rights reserved</div>
     </aside>
 
     <div class="main-content">
         <header class="header-bar">
             <div class="header-left">
-                <span><strong>SponsorName:</strong> Shilowiz</span><span><strong>Protocol ID:</strong> DPR298</span><span><strong>Role name:</strong> CRA</span>
+                <button class="mobile-menu-toggle"><i class="fas fa-bars"></i></button>
+                <div class="header-info-group"><span><strong>SponsorName:</strong> HealthGenic</span><span><strong>Protocol ID:</strong> DPR298</span><span><strong>Role name:</strong> CRA</span></div>
             </div>
-            <div class="header-right">
-                <div class="icon-group"><i class="fas fa-flag-usa"></i><i class="fas fa-bell"></i><i class="fas fa-exchange-alt"></i></div>
-                <div class="user-profile"><span>CRA M</span><div class="user-initial">C</div></div>
-            </div>
+            <div class="header-right"><div class="icon-group"><i class="fas fa-flag-usa"></i><i class="fas fa-bell"></i><i class="fas fa-exchange-alt"></i></div><div class="user-profile"><span>CRA M</span><div class="user-initial">C</div></div></div>
         </header>
 
         <main class="content-area">
             
             <!-- VIEW 1: Dashboard -->
             <div id="dashboard-view" class="page-view">
-                <div class="content-header" style="display:flex; justify-content: space-between; align-items: center;">
-                    <span>Dashboard</span>
-                    <label class="switch" style="font-size: 0.9em; font-weight: 500;">
-                        <input type="checkbox"> Edit mode
-                    </label>
-                </div>
-                <div class="dashboard-stats">
-                    <div class="stat-card"><h4>Total Screening</h4><div class="stat-value">25</div><div class="stat-change" style="color: green;">+5.55%</div></div>
-                    <div class="stat-card"><h4>Total Enrollment</h4><div class="stat-value">20</div><div class="stat-change" style="color: green;">+4%</div></div>
-                    <div class="stat-card"><h4>Total Screen Failure</h4><div class="stat-value">0</div><div class="stat-change" style="color: grey;">0%</div></div>
-                    <div class="stat-card"><h4>Total Completed</h4><div class="stat-value">4</div><div class="stat-change" style="color: green;">+0.85%</div></div>
-                    <div class="stat-card"><h4>Total Dropped Out</h4><div class="stat-value">0</div><div class="stat-change" style="color: grey;">0%</div></div>
-                </div>
-                <div class="dashboard-charts">
-                    <div class="chart-widget">
-                        <div class="widget-header"><h3>Subject Visit Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i> Reload</button></div></div>
-                        <canvas id="visitSummaryChart"></canvas>
-                    </div>
-                    <div class="chart-widget">
-                        <div class="widget-header"><h3>Subject Visit CRF Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i> Reload</button></div></div>
-                        <canvas id="crfSummaryChart"></canvas>
-                    </div>
-                </div>
+                 <div class="content-header" style="display:flex; justify-content: space-between; align-items: center;"><span>Dashboard</span><label class="switch" style="font-size: 0.9em; font-weight: 500;"><input type="checkbox"> Edit mode</label></div>
+                <div class="dashboard-stats"><div class="stat-card"><h4>Total Screening</h4><div class="stat-value">25</div><div class="stat-change" style="color: green;">+5.55%</div></div><div class="stat-card"><h4>Total Enrollment</h4><div class="stat-value">20</div><div class="stat-change" style="color: green;">+4%</div></div><div class="stat-card"><h4>Total Screen Failure</h4><div class="stat-value">0</div><div class="stat-change" style="color: grey;">0%</div></div><div class="stat-card"><h4>Total Completed</h4><div class="stat-value">4</div><div class="stat-change" style="color: green;">+0.85%</div></div><div class="stat-card"><h4>Total Dropped Out</h4><div class="stat-value">0</div><div class="stat-change" style="color: grey;">0%</div></div></div>
+                <div class="dashboard-charts"><div class="chart-widget"><div class="widget-header"><h3>Subject Visit Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i> Reload</button></div></div><canvas id="visitSummaryChart"></canvas></div><div class="chart-widget"><div class="widget-header"><h3>Subject Visit CRF Summary</h3><div class="widget-controls"><select><option>All</option></select><button class="reload-btn"><i class="fas fa-sync-alt"></i> Reload</button></div></div><canvas id="crfSummaryChart"></canvas></div></div>
             </div>
 
             <!-- VIEW 2: Study Information -->
             <div id="study-info-view" class="page-view">
                 <div class="content-header">Study Information</div>
-                <div class="card" style="padding: 30px;">
-                    <div class="info-grid">
-                        <div class="info-item"><span class="label">Client Name</span><span class="value">Shilowiz</span></div>
-                        <div class="info-item"><span class="label">Study Name</span><span class="value">Demo Study</span></div>
-                        <div class="info-item"><span class="label">Protocol ID</span><span class="value">DPR298</span></div>
-                        <div class="info-item"><span class="label">Protocol Title</span><span class="value">Demo study</span></div>
-                        <div class="info-item"><span class="label">Sponsor</span><span class="value">Shilowiz</span></div>
-                        <div class="info-item"><span class="label">Sponsor Address</span><span class="value">USA</span></div>
-                        <div class="info-item"><span class="label">Planned Study Start Date</span><span class="value">23/Jun/2023</span></div>
-                        <div class="info-item"><span class="label">Expected End Date</span><span class="value">13/Aug/2025</span></div>
-                        <div class="info-item"><span class="label">Study Committed</span><span class="value">true</span></div>
-                        <div class="info-item"><span class="label">Study Go Live Date</span><span class="value"></span></div>
-                        <div class="info-item"><span class="label">After Go Live Start Study Date</span><span class="value"></span></div>
-                        <div class="info-item"><span class="label">After Go Live Stop Study Date</span><span class="value"></span></div>
-                        <div class="info-item"><span class="label">Study Freezed</span><span class="value">false</span></div>
-                        <div class="info-item"></div>
-                        <div class="info-item"><span class="label">Expected Total Enrollment</span><span class="value">1000</span></div>
-                        <div class="info-item"><span class="label">Principal Investigator</span><span class="value">Zames</span></div>
-                        <div class="info-item"><span class="label">Therapeutic Area</span><span class="value">Oncology and Hematology</span></div>
-                        <div class="info-item"><span class="label">Study Phase</span><span class="value">PHASE IV</span></div>
-                        <div class="info-item"><span class="label">Blinding</span><span class="value">Open Label</span></div>
-                        <div class="info-item"><span class="label">Study Type</span><span class="value">Restrospective</span></div>
-                        <div class="info-item"><span class="label">Study Subject ID</span><span class="value">Auto Generated Non-Editable</span></div>
-                        <div class="info-item"><span class="label">Date Format</span><span class="value">DD/MMM/YYYY</span></div>
-                        <div class="info-item"><span class="label">Study has SDV Verification</span><span class="value">true</span></div>
-                        <div class="info-item"><span class="label">Study has PI Signature</span><span class="value">true</span></div>
-                        <div class="info-item"><span class="label">Study has Site Level Visit CRF Mapping</span><span class="value">false</span></div>
-                    </div>
-                </div>
+                <div class="card" style="padding: 30px;"><div class="info-grid"><div class="info-item"><span class="label">Client Name</span><span class="value">HealthGenic</span></div><div class="info-item"><span class="label">Study Name</span><span class="value">Demo Study</span></div><div class="info-item"><span class="label">Protocol ID</span><span class="value">DPR298</span></div><div class="info-item"><span class="label">Protocol Title</span><span class="value">Demo study</span></div><div class="info-item"><span class="label">Sponsor</span><span class="value">HealthGenic</span></div><div class="info-item"><span class="label">Sponsor Address</span><span class="value">USA</span></div><div class="info-item"><span class="label">Planned Study Start Date</span><span class="value">23/Jun/2023</span></div><div class="info-item"><span class="label">Expected End Date</span><span class="value">13/Aug/2025</span></div><div class="info-item"><span class="label">Study Committed</span><span class="value">true</span></div><div class="info-item"><span class="label">Study Go Live Date</span><span class="value"></span></div><div class="info-item"><span class="label">After Go Live Start Study Date</span><span class="value"></span></div><div class="info-item"><span class="label">After Go Live Stop Study Date</span><span class="value"></span></div><div class="info-item"><span class="label">Study Freezed</span><span class="value">false</span></div><div class="info-item"></div><div class="info-item"><span class="label">Expected Total Enrollment</span><span class="value">1000</span></div><div class="info-item"><span class="label">Principal Investigator</span><span class="value">Zames</span></div><div class="info-item"><span class="label">Therapeutic Area</span><span class="value">Oncology and Hematology</span></div><div class="info-item"><span class="label">Study Phase</span><span class="value">PHASE IV</span></div><div class="info-item"><span class="label">Blinding</span><span class="value">Open Label</span></div><div class="info-item"><span class="label">Study Type</span><span class="value">Restrospective</span></div><div class="info-item"><span class="label">Study Subject ID</span><span class="value">Auto Generated Non-Editable</span></div><div class="info-item"><span class="label">Date Format</span><span class="value">DD/MMM/YYYY</span></div><div class="info-item"><span class="label">Study has SDV Verification</span><span class="value">true</span></div><div class="info-item"><span class="label">Study has PI Signature</span><span class="value">true</span></div><div class="info-item"><span class="label">Study has Site Level Visit CRF Mapping</span><span class="value">false</span></div></div></div>
             </div>
             
             <!-- VIEW 3: CRF Vision (Visit List) -->
             <div id="visit-list-view" class="page-view">
                 <div class="content-header">Subject ID - S01103</div>
-                <div class="card">
-                    <div class="visit-card-header"><h3>Visit-1 Screening Visit</h3><i class="fas fa-chevron-up"></i></div>
-                    <div class="visit-card-body">
-                        <div class="visit-row"><i class="status-icon green fas fa-eye" data-form="visit-form"></i><div><div class="form-name">VISIT 1 - SCREENING VISIT[V1VD]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div>
-                        <div class="visit-row"><i class="status-icon green fas fa-eye" data-form="consent-form"></i><div><div class="form-name">INFORMED CONSENT[ICF]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div>
-                        <div class="visit-row"><i class="status-icon green fas fa-eye" data-form="demographics-form"></i><div><div class="form-name">DEMOGRAPHICS[DG]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div>
-                    </div>
-                </div>
+                <div class="card"><div class="visit-card-header"><h3>Visit-1 Screening Visit</h3><i class="fas fa-chevron-up"></i></div><div class="visit-card-body"><div class="visit-row"><i class="status-icon green fas fa-eye" data-form="visit-form"></i><div><div class="form-name">VISIT 1 - SCREENING VISIT[V1VD]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div><div class="visit-row"><i class="status-icon green fas fa-eye" data-form="consent-form"></i><div><div class="form-name">INFORMED CONSENT[ICF]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div><div class="visit-row"><i class="status-icon green fas fa-eye" data-form="demographics-form"></i><div><div class="form-name">DEMOGRAPHICS[DG]</div><div class="form-version">V1.0</div></div><i class="status-icon blue fas fa-vial"></i><i class="status-icon disabled fas fa-spider"></i><i class="status-icon green fas fa-check-circle"></i><i class="status-icon green fas fa-flask"></i><i class="status-icon green fas fa-file-alt"></i><i class="status-icon green fas fa-edit"></i><i class="status-icon blue fas fa-icicles"></i><i class="status-icon disabled fas fa-lock"></i></div></div></div>
             </div>
 
             <!-- VIEW 4: Reports -->
             <div id="reports-view" class="page-view">
-                <div class="content-header">Reports</div>
-                <div class="reports-filters">
-                    <div class="filter-group">
-                        <select><option>Select Sites: Sites(S02) x, Site1(S01) x</option></select>
-                        <select><option>Select A Report: CRF Summary x</option></select>
-                    </div>
-                    <div class="actions-group">
-                        <button class="btn-secondary"><i class="fas fa-file-excel"></i> Export to excel</button>
-                        <button class="btn-primary">Get Reports</button>
-                        <button class="btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <table class="reports-table">
-                        <thead>
-                            <tr><th>Protocol ID</th><th>Site ID</th><th>Subject Code</th><th>Study Name</th><th>Subject Status</th><th>Data Entry Start Date</th><th>Visit Name</th><th>CRF Name</th><th>CRF Version</th><th>CRF Status</th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- Sample Data Rows -->
-                            <tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>10/Sep/2023</td><td>Visit-1 Screening Visit</td><td>VISIT 1 - SCREENING VISIT</td><td>1.0</td><td>Lock</td></tr>
-                            <tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>10/Sep/2023</td><td>Visit-1 Screening Visit</td><td>INFORMED CONSENT</td><td>1.0</td><td>Lock</td></tr>
-                             <tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>11/Sep/2023</td><td>Visit-2 Base Line Period</td><td>VISIT 2 - BASELINE PERIOD</td><td>1.0</td><td>Lock</td></tr>
-                             <tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>11/Sep/2023</td><td>Visit-3 Treatment Period</td><td>LABORATORY RESULTS (EFFICACY TESTS)</td><td>1.0</td><td>Lock</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="content-header">Reports</div><div class="reports-filters"><div class="filter-group"><select><option>Select Sites: Sites(S02) x, Site1(S01) x</option></select><select><option>Select A Report: CRF Summary x</option></select></div><div class="actions-group"><button class="btn-secondary"><i class="fas fa-file-excel"></i> Export to excel</button><button class="btn-primary">Get Reports</button><button class="btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button></div></div>
+                <div class="card table-container"><table class="reports-table"><thead><tr><th>Protocol ID</th><th>Site ID</th><th>Subject Code</th><th>Study Name</th><th>Subject Status</th><th>Data Entry Start Date</th><th>Visit Name</th><th>CRF Name</th><th>CRF Version</th><th>CRF Status</th></tr></thead><tbody><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>10/Sep/2023</td><td>Visit-1 Screening Visit</td><td>VISIT 1 - SCREENING VISIT</td><td>1.0</td><td>Lock</td></tr><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>10/Sep/2023</td><td>Visit-1 Screening Visit</td><td>INFORMED CONSENT</td><td>1.0</td><td>Lock</td></tr><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>11/Sep/2023</td><td>Visit-2 Base Line Period</td><td>VISIT 2 - BASELINE PERIOD</td><td>1.0</td><td>Lock</td></tr><tr><td>DPR298</td><td>S01</td><td>S01101</td><td>Demo Study</td><td>PI Signature</td><td>11/Sep/2023</td><td>Visit-3 Treatment Period</td><td>LABORATORY RESULTS (EFFICACY TESTS)</td><td>1.0</td><td>Lock</td></tr></tbody></table></div>
             </div>
 
             <!-- CRF FORM VIEWS (Hidden by default) -->
@@ -259,104 +200,116 @@
                  <div class="form-container"><div class="form-header"><button class="back-button"><i class="fas fa-arrow-left"></i> Back</button></div><div class="form-title">VISIT 1 - SCREENING VISIT [V1VD] V1.0</div><p style="text-align:center; padding: 40px; color: #888;">Content for the 'Visit 1 - Screening Visit' form would be displayed here.</p></div>
             </div>
             <div id="consent-form-view" class="page-view">
-                 <div class="form-container"><div class="form-header"><button class="back-button"><i class="fas fa-arrow-left"></i> Back</button><div style="display: flex; gap: 20px; align-items:center;"><div class="text-display">Subject Initials: VF</div><div class="text-display">Subject Code: S01102</div><div class="text-display">Visit Name: Visit-1 Screening Visit</div></div><button class="btn-primary">Print CRF</button></div><div class="form-title">INFORMED CONSENT[ICF] V1.0</div><div class="form-section"><p>Please ensure that informed consent is obtained before initiating any study specific procedures including screening.</p><div class="form-row"><label>Did the subject sign the Informed Consent Form? *</label><div class="input-area"><input type="checkbox" checked> Yes <input type="checkbox"> No</div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div><div class="form-row"><label>Please specify informed consent date</label><div class="input-area"><input type="text" value="31/Jul/2023" readonly></div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div></div></div>
+                 <div class="form-container"><div class="form-header"><button class="back-button"><i class="fas fa-arrow-left"></i> Back</button><div style="display: flex; flex-wrap: wrap; gap: 20px; align-items:center;"><div class="text-display">Subject Initials: VF</div><div class="text-display">Subject Code: S01102</div><div class="text-display">Visit Name: Visit-1 Screening Visit</div></div><div><button class="btn-secondary" style="margin-right: 10px;">Print CRF</button><button id="save-consent-btn" class="btn-primary">Save Data</button></div></div><div class="form-title">INFORMED CONSENT[ICF] V1.0</div><div class="form-section"><div id="consent-status-message"></div><p>Please ensure that informed consent is obtained before initiating any study specific procedures including screening.</p><div class="form-row"><label>Did the subject sign the Informed Consent Form? *</label><div class="input-area"><input type="radio" id="consent-signed-yes" name="Did the subject sign the Informed Consent Form?" value="true" checked> <label for="consent-signed-yes">Yes</label><input type="radio" id="consent-signed-no" name="Did the subject sign the Informed Consent Form?" value="false"> <label for="consent-signed-no">No</label></div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div><div class="form-row"><label>Please specify informed consent date</label><div class="input-area"><input type="date" id="Please specify informed consent date" value="2023-07-31"></div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div></div></div>
             </div>
             <div id="demographics-form-view" class="page-view">
                 <div class="form-container"><div class="form-header"><button class="back-button"><i class="fas fa-arrow-left"></i> Back</button><button class="btn-primary">Print CRF</button></div><div class="form-title">DEMOGRAPHICS[DG] V1.0</div><div class="form-section"><div class="form-row"><label>Demographics performed? *</label><div class="input-area"><input type="checkbox" checked> Yes <input type="checkbox"> No</div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div><p>If response is "Yes", please complete the details below;</p><div class="form-row"><label>Gender</label><div class="input-area"><input type="radio" name="gender" checked> Male <input type="radio" name="gender"> Female</div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div><div class="form-row"><label>Date of Birth</label><div class="input-area"><select><option>1961</option></select></div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div><div class="form-row"><label>Body Weight (Kg):</label><div class="input-area"><input type="text" value="65" readonly></div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div><div class="form-row"><label>Height (cm):</label><div class="input-area"><input type="text" value="161" readonly></div><div class="form-actions"><i class="fas fa-history"></i><i class="fas fa-file-alt"></i></div></div></div></div>
             </div>
-
         </main>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // --- STEP 1: INITIALIZE SUPABASE CLIENT ---
+            const SUPABASE_URL = 'https://xykqyuefcbjgdooznlzw.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5a3F5dWVmY2JqZ2Rvb3pubHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMDI2NjIsImV4cCI6MjA2ODc3ODY2Mn0.GoCVbFbJjQqbVsMNluxoHdZ90elbzKvAqCcJH9JR66w'; 
+
+            // Correctly initialize the client from the global supabase object
+            const { createClient } = window.supabase;
+            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized successfully.');
+
+            // --- STEP 2: DEFINE FUNCTIONS ---
+            async function saveConsentData() {
+                const statusMessage = document.getElementById('consent-status-message');
+                statusMessage.textContent = 'Saving...';
+                statusMessage.className = '';
+
+                try {
+                    const didSignRadio = document.querySelector('input[name="Did the subject sign the Informed Consent Form?"]:checked');
+                    const consentDateInput = document.getElementById('Please specify informed consent date');
+
+                    if (!didSignRadio) { throw new Error('Selection for signing the form is required.'); }
+                    if (!consentDateInput || !consentDateInput.value) { throw new Error('Informed consent date is required.'); }
+
+                    const didSign = didSignRadio.value === 'true';
+                    const consentDate = consentDateInput.value;
+                    
+                    const dataToInsert = {
+                        'Did the subject sign the Informed Consent Form?': didSign, 
+                        'Please specify informed consent date': consentDate 
+                    };
+
+                    const { data, error } = await supabase
+                        .from('Informed consent')
+                        .insert([dataToInsert])
+                        .select();
+
+                    if (error) { throw error; }
+
+                    console.log('Data saved successfully:', data);
+                    statusMessage.textContent = 'Data saved successfully!';
+                    statusMessage.classList.add('status-success');
+
+                } catch (error) {
+                    console.error('Error saving data:', error.message);
+                    statusMessage.textContent = `Error: ${error.message}`;
+                    statusMessage.classList.add('status-error');
+                }
+            }
+
+            // --- STEP 3: GET ELEMENTS AND ATTACH EVENT LISTENERS ---
+            const sidebar = document.querySelector('.sidebar');
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const overlay = document.getElementById('overlay');
             const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
             const allPageViews = document.querySelectorAll('.page-view');
             const viewFormButtons = document.querySelectorAll('.status-icon.fa-eye');
             const backButtons = document.querySelectorAll('.back-button');
+            const saveConsentButton = document.getElementById('save-consent-btn');
 
+            function toggleMenu() {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            }
+            mobileMenuToggle.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            
             function showView(viewId) {
-                // Hide all views
                 allPageViews.forEach(view => view.classList.remove('active'));
-                // Show the target view
                 const targetView = document.getElementById(viewId);
-                if (targetView) {
-                    targetView.classList.add('active');
-                }
-                // Update active state in sidebar
+                if (targetView) targetView.classList.add('active');
                 sidebarLinks.forEach(link => {
                     link.parentElement.classList.remove('active');
-                    if (link.dataset.view === viewId) {
-                        link.parentElement.classList.add('active');
-                    }
+                    if (link.dataset.view === viewId) link.parentElement.classList.add('active');
                 });
+                if (sidebar.classList.contains('open')) { toggleMenu(); }
             }
-
-            // --- Navigation Logic ---
             sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const viewId = this.dataset.view;
-                    if (viewId) {
-                        showView(viewId);
-                    }
-                });
+                link.addEventListener('click', function(e) { e.preventDefault(); const viewId = this.dataset.view; if (viewId) showView(viewId); });
             });
-
-            // --- CRF Vision Form Logic ---
             viewFormButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    const formId = event.currentTarget.getAttribute('data-form');
-                    if (formId) {
-                        showView(formId + '-view');
-                    }
-                });
+                button.addEventListener('click', function(e) { const formId = e.currentTarget.dataset.form; if (formId) showView(formId + '-view'); });
             });
-
             backButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    showView('visit-list-view');
-                });
+                button.addEventListener('click', function() { showView('visit-list-view'); });
             });
 
-            // --- Dashboard Chart Initialization ---
-            function initializeCharts() {
-                // Line Chart: Subject Visit Summary
-                const visitCtx = document.getElementById('visitSummaryChart').getContext('2d');
-                new Chart(visitCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['S01101', 'S01102', 'S01103', 'S01104', 'S01105', 'S01106'],
-                        datasets: [
-                            { label: 'Completed', data: [1, 2, 3, 2, 3, 4], borderColor: '#2ecc71', tension: 0.1, fill: false },
-                            { label: 'Pending', data: [2, 1, 2, 3, 2, 1], borderColor: '#f39c12', tension: 0.1, fill: false },
-                            { label: 'Discrepancies', data: [0, 1, 0, 1, 0, 1], borderColor: '#e74c3c', tension: 0.1, fill: false }
-                        ]
-                    },
-                    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } }
-                });
-
-                // Bar Chart: Subject Visit CRF Summary
-                const crfCtx = document.getElementById('crfSummaryChart').getContext('2d');
-                new Chart(crfCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Visit-1 Screenin..', 'Visit-2 Base Lin..', 'Visit-3 Treatmen..'],
-                        datasets: [
-                            { label: 'CRF Count', data: [118, 35, 28], backgroundColor: ['#3498db', '#f39c12', '#2ecc71'] },
-                            { label: 'Another Series', data: [50, 8, 12], backgroundColor: ['#e74c3c', '#9b59b6', '#1abc9c'] }
-                        ]
-                    },
-                     options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-                });
+            if(saveConsentButton) {
+                saveConsentButton.addEventListener('click', saveConsentData);
             }
 
-            // --- Initial State ---
-            // Set the default view to Dashboard
+            function initializeCharts() {
+                const visitCtx = document.getElementById('visitSummaryChart').getContext('2d');
+                if (visitCtx) new Chart(visitCtx, {type: 'line', data: {labels: ['S01101', 'S01102', 'S01103', 'S01104', 'S01105', 'S01106'], datasets: [{ label: 'Completed', data: [1, 2, 3, 2, 3, 4], borderColor: '#2ecc71', tension: 0.1, fill: false },{ label: 'Pending', data: [2, 1, 2, 3, 2, 1], borderColor: '#f39c12', tension: 0.1, fill: false },{ label: 'Discrepancies', data: [0, 1, 0, 1, 0, 1], borderColor: '#e74c3c', tension: 0.1, fill: false }]}, options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } } });
+                const crfCtx = document.getElementById('crfSummaryChart').getContext('2d');
+                if (crfCtx) new Chart(crfCtx, {type: 'bar', data: {labels: ['Visit-1 Screenin..', 'Visit-2 Base Lin..', 'Visit-3 Treatmen..'], datasets: [{ label: 'CRF Count', data: [118, 35, 28], backgroundColor: ['#3498db', '#f39c12', '#2ecc71'] }, { label: 'Another Series', data: [50, 8, 12], backgroundColor: ['#e74c3c', '#9b59b6', '#1abc9c'] }]}, options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } } });
+            }
+
+            // --- Initial State on Page Load ---
             showView('dashboard-view');
             initializeCharts();
         });
     </script>
-
 </body>
 </html>
