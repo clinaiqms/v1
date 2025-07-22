@@ -136,6 +136,27 @@
             .header-right .icon-group { display: none; }
             .form-header { flex-direction: column; align-items: stretch; }
         }
+        
+        /* --- NEW: Chatbot Styles --- */
+        #chatbot-widget { position: fixed; bottom: 25px; right: 25px; z-index: 1001; }
+        #chat-bubble { width: 60px; height: 60px; background-color: var(--accent-orange); color: var(--primary-dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8em; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease; }
+        #chat-bubble:hover { transform: scale(1.1); }
+        #chat-window { width: 370px; max-height: 500px; background-color: #fff; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; position: absolute; bottom: 80px; right: 0; opacity: 0; transform: translateY(20px); transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none; }
+        #chat-window.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #chat-header { background-color: var(--primary-dark); color: var(--text-light); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        #chat-header h4 { font-weight: 600; }
+        #close-chat-btn { background: none; border: none; color: var(--text-light); font-size: 1.2em; cursor: pointer; }
+        #chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .chat-message { max-width: 85%; padding: 10px 15px; border-radius: 12px; line-height: 1.5; }
+        .bot-message { background-color: #f1f0f0; color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user-message { background-color: var(--accent-orange); color: var(--primary-dark); font-weight: 500; align-self: flex-end; border-bottom-right-radius: 2px; }
+        #chat-input-options { border-top: 1px solid var(--border-color-light); padding: 15px; }
+        #chat-input-options p { font-weight: 600; margin-bottom: 10px; color: var(--text-dark); }
+        .question-btn { display: block; width: 100%; background: none; border: 1px solid var(--border-color-light); padding: 10px; margin-bottom: 8px; border-radius: 6px; text-align: left; cursor: pointer; transition: background-color 0.2s; font-family: 'Inter', sans-serif; font-size: 0.95em; }
+        .question-btn:hover { background-color: #f7f9fc; }
+        @media (max-width: 480px) {
+            #chat-window { width: calc(100vw - 40px); bottom: 90px; right: -15px; }
+        }
 
     </style>
 </head>
@@ -208,16 +229,49 @@
         </main>
     </div>
 
+    <!-- NEW: Chatbot Widget HTML -->
+    <div id="chatbot-widget">
+        <div id="chat-bubble">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+        <div id="chat-window">
+            <div id="chat-header">
+                <h4>ClinAI Assistant</h4>
+                <button id="close-chat-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="chat-messages">
+                <div class="chat-message bot-message">
+                    Hello! How can I help you today? Please select a topic below.
+                </div>
+            </div>
+            <div id="chat-input-options">
+                <p>Common Questions:</p>
+                <button class="question-btn">What is 21 CFR Part 11?</button>
+                <button class="question-btn">What is a CAPA?</button>
+                <button class="question-btn">How is training managed in a QMS?</button>
+                <button class="question-btn">What is an audit trail?</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- STEP 1: INITIALIZE SUPABASE CLIENT ---
             const SUPABASE_URL = 'https://xykqyuefcbjgdooznlzw.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5a3F5dWVmY2JqZ2Rvb3pubHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMDI2NjIsImV4cCI6MjA2ODc3ODY2Mn0.GoCVbFbJjQqbVsMNluxoHdZ90elbzKvAqCcJH9JR66w'; 
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5a3F5dWVmY2JqZ2Rvb3pubHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMDI2NjIsImV4cCI6MjA2ODc3ODY2Mn0.GoCVbJjQqbVsMNluxoHdZ90elbzKvAqCcJH9JR66w'; 
 
             // Correctly initialize the client from the global supabase object
             const { createClient } = window.supabase;
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('Supabase client initialized successfully.');
+
+            // --- Chatbot Knowledge Base ---
+            const knowledgeBase = {
+                "What is 21 CFR Part 11?": "21 CFR Part 11 is an FDA regulation that sets the requirements for electronic records and electronic signatures. It ensures that digital records are as trustworthy and reliable as paper records.",
+                "What is a CAPA?": "CAPA stands for Corrective and Preventive Action. It's a formal process to investigate and solve quality issues, and then take steps to prevent them from happening again.",
+                "How is training managed in a QMS?": "In a QMS, training is managed by linking documents (like SOPs) to specific user roles. The system tracks who has completed required training and maintains records for audits.",
+                "What is an audit trail?": "An audit trail is a secure, computer-generated, time-stamped electronic record that allows for the reconstruction of all events relating to a record. It shows who did what, and when."
+            };
 
             // --- STEP 2: DEFINE FUNCTIONS ---
             async function saveConsentData() {
@@ -268,6 +322,13 @@
             const backButtons = document.querySelectorAll('.back-button');
             const saveConsentButton = document.getElementById('save-consent-btn');
 
+            // Chatbot elements
+            const chatBubble = document.getElementById('chat-bubble');
+            const chatWindow = document.getElementById('chat-window');
+            const closeChatBtn = document.getElementById('close-chat-btn');
+            const chatMessages = document.getElementById('chat-messages');
+            const questionButtons = document.querySelectorAll('.question-btn');
+
             function toggleMenu() {
                 sidebar.classList.toggle('open');
                 overlay.classList.toggle('active');
@@ -299,10 +360,39 @@
                 saveConsentButton.addEventListener('click', saveConsentData);
             }
 
+            // Chatbot Logic
+            function toggleChatWindow() {
+                chatWindow.classList.toggle('open');
+            }
+
+            function handleQuestionClick(event) {
+                const questionText = event.target.textContent;
+                const answerText = knowledgeBase[questionText];
+                
+                const userMessageDiv = document.createElement('div');
+                userMessageDiv.className = 'chat-message user-message';
+                userMessageDiv.textContent = questionText;
+                chatMessages.appendChild(userMessageDiv);
+
+                setTimeout(() => {
+                    const botMessageDiv = document.createElement('div');
+                    botMessageDiv.className = 'chat-message bot-message';
+                    botMessageDiv.textContent = answerText || "I'm sorry, I don't have an answer for that yet.";
+                    chatMessages.appendChild(botMessageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 500);
+            }
+
+            chatBubble.addEventListener('click', toggleChatWindow);
+            closeChatBtn.addEventListener('click', toggleChatWindow);
+            questionButtons.forEach(button => {
+                button.addEventListener('click', handleQuestionClick);
+            });
+
             function initializeCharts() {
-                const visitCtx = document.getElementById('visitSummaryChart').getContext('2d');
+                const visitCtx = document.getElementById('visitSummaryChart')?.getContext('2d');
                 if (visitCtx) new Chart(visitCtx, {type: 'line', data: {labels: ['S01101', 'S01102', 'S01103', 'S01104', 'S01105', 'S01106'], datasets: [{ label: 'Completed', data: [1, 2, 3, 2, 3, 4], borderColor: '#2ecc71', tension: 0.1, fill: false },{ label: 'Pending', data: [2, 1, 2, 3, 2, 1], borderColor: '#f39c12', tension: 0.1, fill: false },{ label: 'Discrepancies', data: [0, 1, 0, 1, 0, 1], borderColor: '#e74c3c', tension: 0.1, fill: false }]}, options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { position: 'bottom' } } } });
-                const crfCtx = document.getElementById('crfSummaryChart').getContext('2d');
+                const crfCtx = document.getElementById('crfSummaryChart')?.getContext('2d');
                 if (crfCtx) new Chart(crfCtx, {type: 'bar', data: {labels: ['Visit-1 Screenin..', 'Visit-2 Base Lin..', 'Visit-3 Treatmen..'], datasets: [{ label: 'CRF Count', data: [118, 35, 28], backgroundColor: ['#3498db', '#f39c12', '#2ecc71'] }, { label: 'Another Series', data: [50, 8, 12], backgroundColor: ['#e74c3c', '#9b59b6', '#1abc9c'] }]}, options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } } });
             }
 
