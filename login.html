@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinAIQMS - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --primary-dark: #1a1a1a; --accent-orange: #F39C12; --text-medium: #a0a0a0; --text-dark: #1a1a1a; --background-light: #fdfdfd; --border-color-light: #e9eef2; --login-blue: #3498db; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
+        #login-page { display: flex; flex-direction: row; width: 100%; height: 100%; }
+        .login-art-panel { flex: 1.2; background-color: #0d1b2a; background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.pexels.com/photos/5726794/pexels-photo-5726794.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 40px; }
+        .login-art-content .logo { font-size: 4em; font-weight: 700; }
+        .login-art-content .logo .ai { color: var(--accent-orange); }
+        .login-art-content .tagline { font-size: 1.3em; color: var(--text-medium); margin-top: 15px; }
+        .login-form-panel { flex: 1; background-color: var(--background-light); display: flex; justify-content: center; align-items: center; }
+        .login-form-container { width: 100%; max-width: 380px; }
+        .login-form-container h1 { font-size: 2.5em; font-weight: 700; color: var(--text-dark); margin-bottom: 40px; }
+        .login-form-container .input-group { margin-bottom: 25px; }
+        .login-form-container input { width: 100%; padding: 16px; border: 1px solid var(--border-color-light); border-radius: 8px; font-size: 1em; }
+        .login-form-container .login-button { width: 100%; padding: 16px; border: none; border-radius: 8px; background-color: var(--login-blue); color: white; font-size: 1.1em; font-weight: 600; cursor: pointer; }
+        #login-error-message { color: #e74c3c; margin-top: 15px; text-align: center; min-height: 20px; }
+    </style>
+</head>
+<body>
+    <div id="login-page">
+        <div class="login-art-panel"><div class="login-art-content"><span class="logo">Clin<span class="ai">AI</span>QMS</span><p class="tagline">Intelligent Clinical Trial Management</p></div></div>
+        <div class="login-form-panel">
+            <div class="login-form-container">
+                <h1>Log in</h1>
+                <form id="login-form">
+                    <div class="input-group"><input type="email" id="email" placeholder="Email *" required value="cra@yourapp.com"></div>
+                    <div class="input-group"><input type="password" id="password" placeholder="Password *" required value="Test@123"></div>
+                    <button type="submit" class="login-button">Log in</button>
+                    <p id="login-error-message"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const SUPABASE_URL = 'https://xykqyuefcbjgdooznlzw.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5a3F5dWVmY2JqZ2Rvb3pubHp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMDI2NjIsImV4cCI6MjA2ODc3ODY2Mn0.GoCVbFbJjQqbVsMNluxoHdZ90elbzKvAqCcJH9JR66w'; 
+            const { createClient } = window.supabase;
+            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            const loginForm = document.getElementById('login-form');
+            const errorMessage = document.getElementById('login-error-message');
+
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                errorMessage.textContent = '';
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    errorMessage.textContent = 'Invalid login credentials.';
+                } else {
+                    // SUCCESS! Redirect to the main app file.
+                    window.location.href = 'app.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
